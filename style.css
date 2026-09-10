@@ -230,4 +230,4 @@ body{
 }
 .idle-video.show{display:flex;}
 body.video-playing{overflow:hidden;}
-.idle-video video{width:100%;height:100%;object-fit:cover;}
+.idle-video video{width:100%;height:100%;object-fit:contain;}
