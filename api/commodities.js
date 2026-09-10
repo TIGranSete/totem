@@ -1,30 +1,36 @@
 const SOURCE_URL = "https://www.noticiasagricolas.com.br/cotacoes";
 
 const PRODUCTS = [
-  { slug: "soja", label: "SOJA", unit: "R$/SACA 60KG" },
-  { slug: "milho", label: "MILHO", unit: "R$/SACA 60KG" },
-  { slug: "algodao", label: "ALGODÃO", unit: "CENT R$/LB" },
+  { slug: "soja", label: "SOJA", nameStartsWith: "soja", prefix: "R$ " },
+  { slug: "milho", label: "MILHO", nameStartsWith: "milho", prefix: "R$ " },
+  { slug: "algodao", label: "ALGODÃO", nameStartsWith: "algod", prefix: "" },
 ];
 
-function extractRow(html, slug, titleMatch) {
-  const marker = `href="/cotacoes/${slug}" title="${titleMatch}"`;
-  const anchorIdx = html.indexOf(marker);
-  if (anchorIdx === -1) return null;
+function parseCepeaTable(html) {
+  const startIdx = html.indexOf("INDICADORES CEPEA");
+  if (startIdx === -1) return null;
 
-  const tbodyIdx = html.indexOf("<tbody", anchorIdx);
-  if (tbodyIdx === -1) return null;
+  const tbodyIdx = html.indexOf("<tbody", startIdx);
+  const tbodyEnd = html.indexOf("</tbody>", tbodyIdx);
+  if (tbodyIdx === -1 || tbodyEnd === -1) return null;
+  const tbodyHtml = html.slice(tbodyIdx, tbodyEnd);
 
-  const chunk = html.slice(tbodyIdx, tbodyIdx + 2000);
-  const rowMatch = chunk.match(
-    /<td>\s*([\d/]+)\s*<\/td>\s*<td>\s*([-\d,.]+)\s*<\/td>\s*<td>\s*(-?[\d,.]+%)\s*<\/td>/
-  );
-  if (!rowMatch) return null;
+  let date = null;
+  const dateMatch = tbodyHtml.match(/Valores do dia:\s*([\d/]+)/);
+  if (dateMatch) date = dateMatch[1].trim();
 
-  return {
-    date: rowMatch[1].trim(),
-    value: rowMatch[2].trim(),
-    variation: rowMatch[3].trim(),
-  };
+  const rows = [];
+  const rowRe = /<tr[^>]*>([\s\S]*?)<\/tr>/g;
+  let m;
+  while ((m = rowRe.exec(tbodyHtml))) {
+    const rowHtml = m[1];
+    const spans = [...rowHtml.matchAll(/<span>([^<]*)<\/span>/g)].map(s => s[1].trim());
+    if (spans.length >= 3) {
+      rows.push({ name: spans[0], value: spans[1], variation: spans[2] });
+    }
+  }
+
+  return { rows, date };
 }
 
 module.exports = async function handler(req, res) {
@@ -38,12 +44,23 @@ module.exports = async function handler(req, res) {
     if (!response.ok) throw new Error("HTTP " + response.status);
     const html = await response.text();
 
-    const titleBySlug = { soja: "Soja", milho: "Milho", algodao: "Algodão" };
+    const table = parseCepeaTable(html);
     const result = {};
     for (const p of PRODUCTS) {
-      const row = extractRow(html, p.slug, titleBySlug[p.slug]);
+      const row = table && table.rows.find(r =>
+        r.name.toLowerCase().startsWith(p.nameStartsWith)
+      );
+      const unitMatch = row && row.name.match(/\(([^)]+)\)/);
       result[p.slug] = row
-        ? { label: p.label, unit: p.unit, source: "CEPEA/ESALQ", ...row }
+        ? {
+            label: p.label,
+            unit: unitMatch ? unitMatch[1].toUpperCase() : "",
+            prefix: p.prefix,
+            source: "CEPEA/ESALQ",
+            date: (table && table.date) || "",
+            value: row.value,
+            variation: row.variation.replace(/\s+/g, ""),
+          }
         : null;
     }
 

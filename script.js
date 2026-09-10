@@ -270,7 +270,7 @@ function applyCommodities(data) {
     }
     const up = !d.variation.trim().startsWith("-");
     card.querySelector(".pair-name").textContent = `${c.label} · ${d.unit}`;
-    card.querySelector(".commodity-value").textContent = d.unit.startsWith("R$") ? `R$ ${d.value}` : d.value;
+    card.querySelector(".commodity-value").textContent = `${d.prefix || ""}${d.value}`;
     const varEl = card.querySelector(".commodity-var");
     varEl.textContent = `${up ? "▲" : "▼"} ${d.variation.replace("-", "")}`;
     varEl.classList.toggle("up", up);
