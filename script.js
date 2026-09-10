@@ -3,10 +3,14 @@ const PAIRS = [
   { code: "USD-BRL", key: "USDBRL", label: "USD/BRL", flag: "US$" },
   { code: "EUR-BRL", key: "EURBRL", label: "EUR/BRL", flag: "€" },
   { code: "GBP-BRL", key: "GBPBRL", label: "GBP/BRL", flag: "£" },
-  { code: "ARS-BRL", key: "ARSBRL", label: "ARS/BRL", flag: "$" },
-  { code: "JPY-BRL", key: "JPYBRL", label: "JPY/BRL", flag: "¥" },
-  { code: "PYG-BRL", key: "PYGBRL", label: "PYG/BRL", flag: "₲" },
 ];
+
+const COMMODITIES = [
+  { slug: "soja", label: "SOJA" },
+  { slug: "milho", label: "MILHO" },
+  { slug: "algodao", label: "ALGODÃO" },
+];
+const COMMODITIES_REFRESH_MS = 30 * 60 * 1000;
 
 const REFRESH_MS = 45000;
 const MAX_INTRADAY_POINTS = 80;
@@ -91,9 +95,28 @@ function setCardMode(pair, mode) {
 const cardsContainer = document.getElementById("cards");
 PAIRS.forEach(p => cardsContainer.appendChild(buildCardSkeleton(p)));
 
+// ---------- Commodity cards ----------
+function buildCommodityCardSkeleton(c) {
+  const el = document.createElement("div");
+  el.className = "commodity-card";
+  el.id = `card-${c.slug}`;
+  el.innerHTML = `
+    <div class="pair-name">${c.label} · --</div>
+    <div class="pair-value commodity-value">--</div>
+    <div class="commodity-foot">
+      <span class="ticker-badge commodity-var">--</span>
+      <span class="commodity-date">--</span>
+    </div>
+  `;
+  return el;
+}
+
+const commodityCardsContainer = document.getElementById("commodity-cards");
+COMMODITIES.forEach(c => commodityCardsContainer.appendChild(buildCommodityCardSkeleton(c)));
+
 // ---------- Ticker ----------
 function renderTicker(data) {
-  const ticker = document.getElementById("ticker");
+  const ticker = document.getElementById("ticker-currencies");
   ticker.innerHTML = "";
   PAIRS.forEach(p => {
     const d = data[p.key];
@@ -105,6 +128,24 @@ function renderTicker(data) {
       <span class="name">${p.label}</span>
       <span class="price">R$ ${formatPrice(d.bid, p.key)}</span>
       <span class="ticker-badge ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${Math.abs(parseFloat(d.pctChange)).toFixed(2)}%</span>
+    `;
+    ticker.appendChild(item);
+  });
+}
+
+function renderCommodityTicker(data) {
+  const ticker = document.getElementById("ticker-commodities");
+  ticker.innerHTML = "";
+  COMMODITIES.forEach(c => {
+    const d = data[c.slug];
+    if (!d) return;
+    const up = !d.variation.trim().startsWith("-");
+    const item = document.createElement("div");
+    item.className = "ticker-item";
+    item.innerHTML = `
+      <span class="name">${d.label}</span>
+      <span class="price">${d.value}</span>
+      <span class="ticker-badge ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${d.variation.replace("-", "")}</span>
     `;
     ticker.appendChild(item);
   });
@@ -204,6 +245,42 @@ async function fetchDaily(pair) {
   }
 }
 
+async function fetchCommodities() {
+  try {
+    const res = await fetch("/api/commodities");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    applyCommodities(data);
+  } catch (err) {
+    console.error("Erro ao buscar commodities agrícolas:", err);
+  }
+}
+
+function applyCommodities(data) {
+  const now = new Date();
+  const refTime = `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+  document.getElementById("commodities-update-ref").textContent = `REF: ${refTime}`;
+
+  COMMODITIES.forEach(c => {
+    const d = data[c.slug];
+    const card = document.getElementById(`card-${c.slug}`);
+    if (!d) {
+      card.querySelector(".pair-name").textContent = `${c.label} · INDISPONÍVEL`;
+      return;
+    }
+    const up = !d.variation.trim().startsWith("-");
+    card.querySelector(".pair-name").textContent = `${c.label} · ${d.unit}`;
+    card.querySelector(".commodity-value").textContent = d.unit.startsWith("R$") ? `R$ ${d.value}` : d.value;
+    const varEl = card.querySelector(".commodity-var");
+    varEl.textContent = `${up ? "▲" : "▼"} ${d.variation.replace("-", "")}`;
+    varEl.classList.toggle("up", up);
+    varEl.classList.toggle("down", !up);
+    card.querySelector(".commodity-date").textContent = `${d.source} · ${d.date}`;
+  });
+
+  renderCommodityTicker(data);
+}
+
 document.getElementById("year").textContent = new Date().getFullYear();
 
 // ---------- Idle video (attract mode) ----------
@@ -268,3 +345,6 @@ resetIdleTimer();
 fetchLast();
 setInterval(fetchLast, REFRESH_MS);
 PAIRS.forEach(p => fetchDaily(p));
+
+fetchCommodities();
+setInterval(fetchCommodities, COMMODITIES_REFRESH_MS);

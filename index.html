@@ -23,7 +23,8 @@
 
 <div class="ticker-wrap">
   <div id="ticker" class="ticker">
-    <span class="ticker-loading">Carregando cotações…</span>
+    <span id="ticker-currencies" class="ticker-group"><span class="ticker-loading">Carregando cotações…</span></span>
+    <span id="ticker-commodities" class="ticker-group"></span>
   </div>
 </div>
 
@@ -38,6 +39,16 @@
   </div>
 
   <div id="cards" class="cards-grid"></div>
+
+  <div class="section-head commodities-head">
+    <div class="section-title"><span class="bar"></span>COMMODITIES AGRÍCOLAS</div>
+    <div class="section-meta">
+      FONTE: CEPEA/ESALQ (NOTÍCIAS AGRÍCOLAS)<br>
+      <span id="commodities-update-ref">REF: --:--</span>
+    </div>
+  </div>
+
+  <div id="commodity-cards" class="cards-grid commodities-grid"></div>
 </main>
 
 <footer class="statusbar">
