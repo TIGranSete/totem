@@ -207,7 +207,7 @@ async function fetchDaily(pair) {
 document.getElementById("year").textContent = new Date().getFullYear();
 
 // ---------- Idle video (attract mode) ----------
-const IDLE_MS = 3 * 60 * 1000;
+const IDLE_MS = 1 * 60 * 1000;
 const idleOverlay = document.getElementById("idle-video");
 const idleVideoEl = document.getElementById("idle-video-el");
 let idleTimer = null;
