@@ -79,8 +79,8 @@ body{
 }
 .ticker{
   display:flex;
-  gap:40px;
-  padding:12px 24px;
+  gap:48px;
+  padding:18px 24px;
   overflow-x:auto;
   scrollbar-width:none;
 }
@@ -89,17 +89,17 @@ body{
 .ticker-group{display:contents;}
 
 .ticker-item{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:14px;
   white-space:nowrap;
   font-family:var(--mono);
 }
-.ticker-item .name{color:var(--text-dim);font-size:11px;letter-spacing:1px;}
-.ticker-item .price{font-weight:700;font-size:14px;}
+.ticker-item .name{color:var(--text-dim);font-size:14px;letter-spacing:1px;}
+.ticker-item .price{font-weight:700;font-size:22px;}
 .ticker-badge{
   display:inline-flex;align-items:center;gap:4px;
-  padding:3px 8px;
-  border-radius:4px;
-  font-size:11px;
+  padding:5px 10px;
+  border-radius:5px;
+  font-size:14px;
   font-weight:700;
 }
 .ticker-badge.up{background:rgba(76,175,80,0.14);color:var(--green);}
