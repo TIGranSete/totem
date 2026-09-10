@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRAN7 — Painel de Mercado</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="logo.svg">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img class="brand-logo" src="logo.png" alt="GRAN7">
+    <span class="brand-sub">PAINEL DE MERCADO · CÂMBIO EM TEMPO REAL</span>
+  </div>
+
+  <div class="clock">
+    <div id="clock-time" class="clock-time">--:--:--</div>
+    <div id="clock-date" class="clock-date">-- --- ----</div>
+  </div>
+</header>
+
+<div class="ticker-wrap">
+  <div id="ticker" class="ticker">
+    <span class="ticker-loading">Carregando cotações…</span>
+  </div>
+</div>
+
+<main class="content">
+  <div class="section-head">
+    <div class="section-title"><span class="bar"></span>CÂMBIO INTERNACIONAL</div>
+    <div class="section-meta">
+      <span id="refresh-icon" class="refresh-icon">⟳</span>
+      ATUALIZAÇÃO EM TEMPO REAL VIA AWESOMEAPI<br>
+      <span id="last-update-ref">REF: --:--:--</span>
+    </div>
+  </div>
+
+  <div id="cards" class="cards-grid"></div>
+</main>
+
+<footer class="statusbar">
+  <div class="status-center">
+    <img class="brand-mark small" src="logo.png" alt="GRAN7">
+    GRAN7 — PAINEL DE MERCADO · © <span id="year"></span>
+  </div>
+</footer>
+
+<div id="idle-video" class="idle-video">
+  <video id="idle-video-el" src="video.mp4" playsinline></video>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
