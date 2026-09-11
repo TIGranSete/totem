@@ -282,6 +282,13 @@ function applyCommodities(data) {
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
+function updateDebugRes() {
+  const el = document.getElementById("debug-res");
+  if (el) el.textContent = `${window.innerWidth}×${window.innerHeight}`;
+}
+updateDebugRes();
+window.addEventListener("resize", updateDebugRes);
+
 // ---------- Idle video (attract mode) ----------
 const IDLE_MS = 1 * 60 * 1000;
 const idleOverlay = document.getElementById("idle-video");

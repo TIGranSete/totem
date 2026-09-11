@@ -85,7 +85,9 @@ body{
 }
 .ticker{
   display:flex;
-  gap:clamp(16px, 3.3vw, 64px);
+  flex-wrap:wrap;
+  row-gap:clamp(2px, 0.6vh, 8px);
+  column-gap:clamp(16px, 3.3vw, 64px);
   padding:clamp(4px, 1.3vh, 18px) clamp(16px, 2.1vw, 40px);
   overflow-x:auto;
   scrollbar-width:none;
@@ -183,8 +185,8 @@ body{
   display:flex;justify-content:space-between;align-items:center;
   font-size:clamp(9px, 0.73vw, 14px);color:var(--text-faint);letter-spacing:0.5px;
 }
-@media (max-width:1100px){.cards-grid{grid-template-columns:repeat(2,1fr);} #cards.cards-grid{max-width:none;}}
-@media (max-width:700px){.cards-grid{grid-template-columns:1fr;}}
+@media (max-width:640px){.cards-grid{grid-template-columns:repeat(2,1fr);} #cards.cards-grid{max-width:none;}}
+@media (max-width:420px){.cards-grid{grid-template-columns:1fr;}}
 
 .card{
   background:var(--bg-card);
