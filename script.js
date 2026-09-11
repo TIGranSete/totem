@@ -340,6 +340,50 @@ window.addEventListener("resize", () => {
 });
 resetIdleTimer();
 
+// ---------- Keep screen awake (TVs / kiosk browsers) ----------
+// Smart TV browsers (LG WebOS etc.) trigger their screensaver/sleep when they
+// don't detect "activity" on the page. Two complementary strategies:
+// 1) Screen Wake Lock API, where supported.
+// 2) A tiny canvas-driven MediaStream kept playing in a hidden <video> at all
+//    times — this reads as genuine, continuous video playback to the
+//    browser/OS power-management heuristics, without needing any video file.
+function keepScreenAwake() {
+  if ("wakeLock" in navigator) {
+    const requestWakeLock = async () => {
+      try {
+        await navigator.wakeLock.request("screen");
+      } catch (err) {
+        console.warn("Wake Lock indisponível:", err.message);
+      }
+    };
+    requestWakeLock();
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") requestWakeLock();
+    });
+  }
+
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 2;
+    canvas.height = 2;
+    const ctx = canvas.getContext("2d");
+    ctx.fillRect(0, 0, 2, 2);
+
+    const stream = canvas.captureStream(1);
+    const keepAliveVideo = document.createElement("video");
+    keepAliveVideo.srcObject = stream;
+    keepAliveVideo.muted = true;
+    keepAliveVideo.playsInline = true;
+    keepAliveVideo.setAttribute("aria-hidden", "true");
+    keepAliveVideo.style.cssText = "position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;";
+    document.body.appendChild(keepAliveVideo);
+    keepAliveVideo.play().catch(err => console.warn("Keep-alive video não iniciou:", err.message));
+  } catch (err) {
+    console.warn("Keep-alive via canvas indisponível:", err.message);
+  }
+}
+keepScreenAwake();
+
 // ---------- Boot ----------
 fetchLast();
 setInterval(fetchLast, REFRESH_MS);
