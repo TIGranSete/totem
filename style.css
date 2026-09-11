@@ -85,10 +85,9 @@ body{
 }
 .ticker{
   display:flex;
-  flex-wrap:wrap;
-  row-gap:clamp(2px, 0.6vh, 8px);
-  column-gap:clamp(16px, 3.3vw, 64px);
-  padding:clamp(4px, 1.3vh, 18px) clamp(16px, 2.1vw, 40px);
+  flex-wrap:nowrap;
+  gap:clamp(10px, 2vw, 36px);
+  padding:clamp(4px, 1.3vh, 16px) clamp(16px, 2.1vw, 40px);
   overflow-x:auto;
   scrollbar-width:none;
 }
@@ -97,17 +96,17 @@ body{
 .ticker-group{display:contents;}
 
 .ticker-item{
-  display:flex;align-items:center;gap:clamp(8px, 0.85vw, 16px);
+  display:flex;align-items:center;gap:clamp(6px, 0.55vw, 12px);
   white-space:nowrap;
   font-family:var(--mono);
 }
-.ticker-item .name{color:var(--text-dim);font-size:clamp(11px, 1vw, 19px);letter-spacing:1px;}
-.ticker-item .price{font-weight:700;font-size:clamp(15px, 3.2vh, 32px);}
+.ticker-item .name{color:var(--text-dim);font-size:clamp(9px, 0.7vw, 15px);letter-spacing:1px;}
+.ticker-item .price{font-weight:700;font-size:clamp(12px, 2.2vh, 24px);}
 .ticker-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:clamp(3px, 0.36vw, 7px) clamp(7px, 0.73vw, 14px);
-  border-radius:6px;
-  font-size:clamp(11px, 1vw, 19px);
+  display:inline-flex;align-items:center;gap:4px;
+  padding:clamp(2px, 0.3vw, 6px) clamp(5px, 0.55vw, 11px);
+  border-radius:5px;
+  font-size:clamp(9px, 0.7vw, 15px);
   font-weight:700;
 }
 .ticker-badge.up{background:rgba(76,175,80,0.14);color:var(--green);}
