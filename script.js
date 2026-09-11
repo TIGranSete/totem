@@ -2,7 +2,6 @@
 const PAIRS = [
   { code: "USD-BRL", key: "USDBRL", label: "USD/BRL", flag: "US$" },
   { code: "EUR-BRL", key: "EURBRL", label: "EUR/BRL", flag: "€" },
-  { code: "GBP-BRL", key: "GBPBRL", label: "GBP/BRL", flag: "£" },
 ];
 
 const COMMODITIES = [
