@@ -291,6 +291,12 @@ window.addEventListener("resize", updateDebugRes);
 
 // ---------- Idle video (attract mode) ----------
 const IDLE_MS = 1 * 60 * 1000;
+const IDLE_VIDEOS = [
+  "https://github.com/TIGranSete/totem/releases/download/1.0.0/video.mp4",
+  "https://github.com/TIGranSete/totem/releases/download/video-2/Convencao.Gran7.2026.1.MP4",
+];
+let idleVideoIndex = 0;
+
 const idleOverlay = document.getElementById("idle-video");
 const idleVideoEl = document.getElementById("idle-video-el");
 let idleTimer = null;
@@ -301,6 +307,8 @@ function positionIdleOverlay() {
 }
 
 async function enterIdleVideo() {
+  idleVideoEl.src = IDLE_VIDEOS[idleVideoIndex];
+  idleVideoIndex = (idleVideoIndex + 1) % IDLE_VIDEOS.length;
   idleVideoEl.currentTime = 0;
   idleVideoEl.muted = false;
   try {
