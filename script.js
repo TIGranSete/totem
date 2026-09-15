@@ -293,7 +293,7 @@ window.addEventListener("resize", updateDebugRes);
 const IDLE_MS = 1 * 60 * 1000;
 const IDLE_VIDEOS = [
   "https://github.com/TIGranSete/totem/releases/download/1.0.0/video.mp4",
-  "https://github.com/TIGranSete/totem/releases/download/video-2/Convencao.Gran7.2026.1.MP4",
+  "https://github.com/TIGranSete/totem/releases/download/video-2/convencao-gran7-2026.mp4",
 ];
 let idleVideoIndex = 0;
 
