@@ -291,11 +291,22 @@ window.addEventListener("resize", updateDebugRes);
 
 // ---------- Idle video (attract mode) ----------
 const IDLE_MS = 1 * 60 * 1000;
+// Meses em JS: 0 = janeiro ... 9 = outubro ... 11 = dezembro.
+// exceptMonths: não toca nesses meses. onlyMonths: só toca nesses meses.
 const IDLE_VIDEOS = [
-  "https://github.com/TIGranSete/totem/releases/download/1.0.0/video.mp4",
-  "https://github.com/TIGranSete/totem/releases/download/video-2/convencao-gran7-2026.mp4",
+  { url: "https://github.com/TIGranSete/totem/releases/download/1.0.0/video.mp4", exceptMonths: [9] },
+  { url: "https://github.com/TIGranSete/totem/releases/download/video-2/convencao-gran7-2026.mp4" },
 ];
 let idleVideoIndex = 0;
+
+function activeIdleVideos() {
+  const month = new Date().getMonth();
+  const active = IDLE_VIDEOS.filter(v =>
+    (!v.onlyMonths || v.onlyMonths.includes(month)) &&
+    (!v.exceptMonths || !v.exceptMonths.includes(month))
+  );
+  return active.length ? active : IDLE_VIDEOS;
+}
 
 const idleOverlay = document.getElementById("idle-video");
 const idleVideoEl = document.getElementById("idle-video-el");
@@ -307,8 +318,10 @@ function positionIdleOverlay() {
 }
 
 async function enterIdleVideo() {
-  idleVideoEl.src = IDLE_VIDEOS[idleVideoIndex];
-  idleVideoIndex = (idleVideoIndex + 1) % IDLE_VIDEOS.length;
+  const playlist = activeIdleVideos();
+  idleVideoIndex = idleVideoIndex % playlist.length;
+  idleVideoEl.src = playlist[idleVideoIndex].url;
+  idleVideoIndex = (idleVideoIndex + 1) % playlist.length;
   idleVideoEl.currentTime = 0;
   idleVideoEl.muted = false;
   try {
