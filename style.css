@@ -6,12 +6,20 @@
   --line-strong: rgba(76,175,80,0.32);
   --green: #4CAF50;
   --green-dim: #2E7D32;
+  --accent: #4CAF50;
   --red: #f2555a;
   --text: #e7ece9;
   --text-dim: #8a9a91;
   --text-faint: #52625a;
   --mono: "Consolas", "SFMono-Regular", "Courier New", monospace;
   --sans: "Segoe UI", Arial, sans-serif;
+}
+
+/* Outubro Rosa: só detalhes decorativos; alta/baixa continuam verde/vermelho */
+body.theme-rosa{
+  --accent: #F06EB5;
+  --line: rgba(240,110,181,0.2);
+  --line-strong: rgba(240,110,181,0.4);
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -54,6 +62,13 @@ body{
   width:auto;
   object-fit:contain;
 }
+.ribbon{
+  display:none;
+  height:clamp(24px, 6vh, 64px);
+  width:auto;
+  object-fit:contain;
+}
+body.theme-rosa .ribbon{display:block;}
 .brand-mark.small{
   height:clamp(14px, 3vh, 30px);
   width:auto;
@@ -64,7 +79,7 @@ body{
 
 .dot{
   width:clamp(6px, 0.5vw, 10px);height:clamp(6px, 0.5vw, 10px);border-radius:50%;
-  background:var(--green);
+  background:var(--accent);
   animation:pulse 1.4s infinite;
 }
 @keyframes pulse{
@@ -73,7 +88,7 @@ body{
 }
 
 .clock{text-align:right;}
-.clock-time{font-family:var(--mono);font-size:clamp(16px, 5.5vh, 48px);font-weight:700;color:var(--green);letter-spacing:1px;}
+.clock-time{font-family:var(--mono);font-size:clamp(16px, 5.5vh, 48px);font-weight:700;color:var(--accent);letter-spacing:1px;}
 .clock-date{font-size:clamp(8px, 0.85vw, 16px);color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;}
 
 /* ---------- Ticker ---------- */
@@ -135,7 +150,7 @@ body{
   font-size:clamp(13px, 2.6vh, 23px);font-weight:700;letter-spacing:1px;
 }
 .section-title .bar{
-  width:clamp(3px, 0.31vw, 6px);height:clamp(12px, 2.9vh, 26px);background:var(--green);
+  width:clamp(3px, 0.31vw, 6px);height:clamp(12px, 2.9vh, 26px);background:var(--accent);
   border-radius:3px;
 }
 .section-meta{
@@ -143,11 +158,11 @@ body{
   text-align:right;line-height:1.6;letter-spacing:0.5px;
 }
 .refresh-icon{
-  display:inline-block;color:var(--green);margin-right:4px;
+  display:inline-block;color:var(--accent);margin-right:4px;
   animation:spin 3s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg);}}
-#last-update-ref{color:var(--green);}
+#last-update-ref{color:var(--accent);}
 
 .commodities-head{flex:0 0 auto; margin-top:clamp(6px, 1.3vh, 22px);}
 
@@ -226,7 +241,8 @@ body{
   margin:clamp(2px, 0.4vh, 6px) 0 clamp(3px, 0.6vh, 10px);
 }
 .chart path.area{fill:url(#chartGradient);opacity:0.35;}
-.chart path.line{fill:none;stroke:var(--green);stroke-width:2;}
+.chart path.line{fill:none;stroke:var(--accent);stroke-width:2;}
+.chart stop{stop-color:var(--accent);}
 .chart .axis-label{fill:var(--text-faint);font-size:8px;font-family:var(--mono);}
 
 .card-foot{
@@ -239,7 +255,7 @@ body{
   font-size:clamp(9px, 0.68vw, 13px);letter-spacing:0.5px;padding:clamp(2px, 0.5vh, 8px) clamp(7px, 0.73vw, 14px);border-radius:6px;cursor:pointer;
   font-family:var(--sans);
 }
-.mode-btn.active{background:var(--green);color:#03170a;border-color:var(--green);font-weight:700;}
+.mode-btn.active{background:var(--accent);color:#03170a;border-color:var(--accent);font-weight:700;}
 .live-ref{font-size:clamp(9px, 0.68vw, 13px);color:var(--text-faint);display:flex;align-items:center;gap:6px;}
 .live-ref .dot{width:clamp(4px, 0.36vw, 7px);height:clamp(4px, 0.36vw, 7px);}
 
