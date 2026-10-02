@@ -296,6 +296,7 @@ const IDLE_MS = 1 * 60 * 1000;
 const IDLE_VIDEOS = [
   { url: "https://github.com/TIGranSete/totem/releases/download/1.0.0/video.mp4", exceptMonths: [9] },
   { url: "https://github.com/TIGranSete/totem/releases/download/video-2/convencao-gran7-2026.mp4" },
+  { url: "https://github.com/TIGranSete/totem/releases/download/video-3/outubro-rosa-2026.mp4", onlyMonths: [9] },
 ];
 let idleVideoIndex = 0;
 
