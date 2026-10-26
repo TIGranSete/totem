@@ -299,21 +299,24 @@ window.addEventListener("resize", updateDebugRes);
 // ---------- Idle video (attract mode) ----------
 const IDLE_MS = 1 * 60 * 1000;
 // Meses em JS: 0 = janeiro ... 9 = outubro ... 11 = dezembro.
+// disabled: true tira o vídeo do rodízio sem apagar o link.
 // exceptMonths: não toca nesses meses. onlyMonths: só toca nesses meses.
 const IDLE_VIDEOS = [
-  { url: "https://github.com/TIGranSete/totem/releases/download/1.0.0/video.mp4", exceptMonths: [9] },
-  { url: "https://github.com/TIGranSete/totem/releases/download/video-2/convencao-gran7-2026.mp4" },
-  { url: "https://github.com/TIGranSete/totem/releases/download/video-3/outubro-rosa-2026.mp4", onlyMonths: [9] },
+  { url: "https://github.com/TIGranSete/totem/releases/download/video-4/cultiva7-2026.mp4" },
+  { url: "https://github.com/TIGranSete/totem/releases/download/1.0.0/video.mp4", exceptMonths: [9], disabled: true },
+  { url: "https://github.com/TIGranSete/totem/releases/download/video-2/convencao-gran7-2026.mp4", disabled: true },
+  { url: "https://github.com/TIGranSete/totem/releases/download/video-3/outubro-rosa-2026.mp4", onlyMonths: [9], disabled: true },
 ];
 let idleVideoIndex = 0;
 
 function activeIdleVideos() {
   const month = new Date().getMonth();
-  const active = IDLE_VIDEOS.filter(v =>
+  const enabled = IDLE_VIDEOS.filter(v => !v.disabled);
+  const active = enabled.filter(v =>
     (!v.onlyMonths || v.onlyMonths.includes(month)) &&
     (!v.exceptMonths || !v.exceptMonths.includes(month))
   );
-  return active.length ? active : IDLE_VIDEOS;
+  return active.length ? active : (enabled.length ? enabled : IDLE_VIDEOS);
 }
 
 const idleOverlay = document.getElementById("idle-video");
