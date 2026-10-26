@@ -283,8 +283,9 @@ function applyCommodities(data) {
 document.getElementById("year").textContent = new Date().getFullYear();
 
 // Outubro Rosa: tema rosa nos detalhes decorativos durante outubro (mês 9)
+const THEME_ROSA_ENABLED = false;
 function applySeasonalTheme() {
-  document.body.classList.toggle("theme-rosa", new Date().getMonth() === 9);
+  document.body.classList.toggle("theme-rosa", THEME_ROSA_ENABLED && new Date().getMonth() === 9);
 }
 applySeasonalTheme();
 setInterval(applySeasonalTheme, 60 * 60 * 1000);
