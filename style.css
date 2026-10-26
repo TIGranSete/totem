@@ -62,13 +62,11 @@ body{
   width:auto;
   object-fit:contain;
 }
-.ribbon{
-  display:none;
-  height:clamp(24px, 6vh, 64px);
+.mascote{
+  height:clamp(30px, 8vh, 90px);
   width:auto;
   object-fit:contain;
 }
-body.theme-rosa .ribbon{display:block;}
 .brand-mark.small{
   height:clamp(14px, 3vh, 30px);
   width:auto;
